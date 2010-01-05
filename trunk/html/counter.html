@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Web socket client sample</title>
+		<script type="text/javascript" src="do.js"></script>
+		<link rel="stylesheet" href="common.css">
+    </head>
+    <body>
+    	<style type="text/css">
+    	*{
+			font-size: 11pt;
+		}
+		
+		#num {
+			font-weight: bold;
+			color: blue;
+		}
+		</style>
+
+    	<div id="content">
+    	current user => <span id="num"></span>
+    	</div>
+    	<script type="text/javascript">
+			var ws = new WebSocket("ws://localhost/count");
+			ws.onmessage = function(e) {
+				document.getElementById('num').innerHTML = e.data;
+			};
+			ws.onclose = function(e){
+			};
+			window.onunload = function(){
+				ws.close();
+			};
+		</script>
+    </body>
+</html>
