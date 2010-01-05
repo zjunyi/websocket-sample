@@ -101,6 +101,47 @@ WebSocket-Protocol: sample
     pass  # if origin is acceptable.
 }}}
 
+=== don't forget to close thread ===
+
+In many cases, you'll type thread programming, because each _websocket_handler_ works individually (fork process). To share each client's message, shared file or some socket connection is reasonable and this phenomena requires thread programming. If you are in this situation, don't forget to close thread if the connection is going to close. Forget 
+this process sometimes make zombie.
+
+python script will be as follows.
+{{{
+from mod_pywebsocket import msgutil
+
+import thread
+
+_CONNECTING_ = 0
+_OPEN_ = 1
+_CLOSE_ = 2
+
+_status_ = _CONNECTING_
+
+def proc():
+  while True:
+    if _status_ != _OPEN_:
+      break
+    ....
+
+def web_socket_do_extra_handshake(request):
+	pass  # Always accept.
+
+def web_socket_transfer_data(request):
+	global _status_
+	_status_ = _OPEN_
+	attr = ()
+	thread.start_new_thread(proc().run, attr)
+	while True:
+		try:
+			line = msgutil.receive_message(request)
+		except Exception:
+			_status_ = _CLOSE_
+			return
+}}}
+
+
+
 == apache's configuration ===
 
 === persistent connection ===
