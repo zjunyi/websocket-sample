@@ -1,0 +1,127 @@
+#How to install mod_pywebsocket
+
+= Introduction =
+
+This page figures out how to install [http://code.google.com/p/pywebsocket/ mod_pywebsockets].
+
+= Details =
+
+== Conditions ==
+
+OS : Ubuntu9.x
+Apache: apache2.2.x
+{{{
+install directory -> /usr/local/apache2
+mod_so
+}}}
+== Install mod_python ==
+
+=== install python-dev ===
+{{{
+$ sudo aptitude install python-dev
+}}}
+
+=== install mod_python ===
+{{{
+$ wget http://ftp.kddilabs.jp/infosystems/apache/httpd/modpython/mod_python-3.3.1.tgz
+$ tar xvzf mod_python-3.3.1
+$ cd mod_python-3.3.1
+$ vi src/connobject.c
+- !(b == APR_BRIGADE_SENTINEL(b) ||
++ !(b == APR_BRIGADE_SENTINEL(bb) ||
+$ ./configure --with-apxs=/usr/local/apache2/bin/apxs
+$ make
+$ sudo make install
+}}}
+
+=== configure httpd.conf ===
+{{{
+LoadModule python_module modules/mod_python.so
+AddHandler mod_python .py 
+}}}
+=== restart apache ===
+{{{
+$ /usr/local/apache2/bin/apachectl restart 
+}}}
+== Install mod_pywebsocket ==
+
+=== checkout pywebsocket ===
+
+{{{
+$ cd
+$ svn checkout http://pywebsocket.googlecode.com/svn/trunk/ pywebsocket-read-only
+}}}
+
+=== install mod_pywebsocket ===
+
+{{{
+$ cd pywebsocket-read-only
+$ cd src
+
+# setup
+$ python setup.py build
+$ sudo python setup.py install
+}}}
+
+=== tips:: read document by ===
+{{{
+$ pydoc mod_pywebsocket
+}}}
+then pywebsocket library is installed in /usr/local/lib/python2.6/dist-packages/
+
+=== config apache ===
+
+append configuration to httpd.conf shown below.
+
+note::
+ change "somewhere" to your arbitraly directory. "mod_pywebsocket.handler_root" means handler scripts root directory (like documentRoot or cgi-bin)
+
+{{{
+<IfModule python_module>
+  PythonPath "sys.path+['/usr/local/lib/python2.6/dist-packages']"
+  PythonOption mod_pywebsocket.handler_root /somewhere/websock_handlers
+  PythonHeaderParserHandler mod_pywebsocket.headerparserhandler
+</IfModule>
+}}}
+
+=== restart apache ===
+{{{
+$ sudo /usr/local/apache2/bin/apachectl restart
+}}}
+=== make handler_root directory ===
+{{{
+mkdir /somewhere/websock_handlers
+}}}
+=== test sample ===
+
+copy echo server to handler_root
+{{{
+$ cd pywebsocket-read-only/src/example
+$ cp echo_wsh.py /somewhere/websock_handlers/
+}}}
+
+=== execute client script ===
+
+note:: this script access to ws://localhost/echo
+{{{
+$ ./echo_client.py
+Send: Hello
+Recv: Hello
+Send: 日本
+Recv: 日本
+Send: Goodbye
+Recv: Goodbye
+}}}
+
+=== arbitrary message ===
+
+with option -m :)
+{{{
+$ ./echo_client.py -m 'Hello world!!','How are you?'
+Send: Hello world!!
+Recv: Hello world!!
+Send: How are you?
+Recv: How are you?
+Send: Goodbye
+Recv: Goodbye
+}}}
