@@ -1,4 +1,4 @@
-#How to install mod_pywebsocket
+#summary How to install mod_pywebsocket
 
 = Introduction =
 
