@@ -1,13 +1,154 @@
-#summary One-sentence summary of this page.
+#summary Tips for websocket coding.
 
 = Introduction =
 
-Add your content here.
+Tips for websocket coding.
 
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== mod_pywebsocket ==
+
+=== handler name ===
+
+Suffix : _wsh.py
+
+if script name is var_wsh.py and located in _handler_root_/foo/bar_wsh.py, resouce name is /foo/bar. URI will be like this
+
+ws://somewhere/foo/bar
+
+=== properties (request object) ===
+
+  * ws_location
+
+  uri of websocket handler
+
+  e.g.
+
+    ws://somewhere/foo/var  
+
+  * ws_origin
+
+  Indicates web sites which calls ws. If web site's uri is "http://somewhere/foo",
+  ws_origin will be
+
+  http://somewhere
+
+  This property is useful in secure design(Origin-based security model).
+
+  * ws_protocol
+
+  This property indicates sub-protocol name. 
+
+  e.g.
+
+    NULL
+
+  * ws_resource
+
+  Resource name of ws. If ws_location is 'ws://somewhere/foo/bar' resource name will be
+
+    /foo/bar
+
+=== functions ===
+  
+  * web_socket_do_extra_handshake(request)
+
+    This function is called after clients handshake message validation. 
+
+{{{
+GET /demo HTTP/1.1
+Upgrade: WebSocket
+Connection: Upgrade
+Host: example.com
+Origin: http://example.com
+WebSocket-Protocol: sample
+}}}
+
+    If you consider "Origin-based security model", you'll check request.ws_origin.
+    
+    If you "pass" clients receives server messages like as follows and connection is established.
+{{{
+HTTP/1.1 101 Web Socket Protocol Handshake
+Upgrade: WebSocket
+Connection: Upgrade
+WebSocket-Origin: http://example.com
+WebSocket-Location: ws://example.com/demo
+WebSocket-Protocol: sample
+}}}
+
+    If raise exception, you can close connection.
+  
+  * web_socket_transfer_data(request)
+
+    This function is called after connection established. This function manages data frames. If "return", mod_pywebsocket close the connection.
+  
+  * *string* = msgutil.receive_message(request : request)
+
+    Receive message from client ( %x00 + *( UTF8-char / %x80-%x7E )* + %xff )
+
+  * msgutil.send_message(request : _request_ , message : _string_ )
+
+    Send server initiate message to client ( %x00 + *( UTF8-char / %x80-%x7E )* + %xff )
+
+=== how to check Origin-based security model ===
+
+  If handler is restricted to localhost, script will be like as follows
+{{{
+  def web_socket_do_extra_handshake(request):
+    if request.ws_origin != 'http://localhost':
+      raise "ws_origin error "+request.ws_origin
+    pass  # if origin is acceptable.
+}}}
+
+== apache's configuration ===
+
+=== persistent connection ===
+
+  conf/extra/httpd-default.conf
+{{{
+    KeepAlive Off
+}}}
+  (default:On)
+
+Note that remove comment out for "Include httpd-default.conf" in httpd.conf.
+
+Without this configuration, server retains connection for several seconds after ws connection was closed due to HTTP/1.1's persistent-connection. 
+
+Note::
+
+  Delay time is configured in 
+{{{
+    KeepAliveTimeout 5
+}}}
+  in extra/httpd-default.conf
+
+== javascript ==
+
+=== heartbeat ===
+
+After connection established, ws connection is closed by apache after several minutes without any clent side message ( even if server sent message in this minutes!!).
+
+Note::
+
+Default is 300 seconds ( "Timeout" in extra/httpd-default.conf ）
+
+Sending periodically message every few minutes avoid this situation.
+
+Javascript will be like as follows.
+{{{
+setInterval(function() {
+  ws.send('Heartbeat');
+}, 60000);
+}}}
+
+=== window.onunload ===
+
+Sometime, it seems to be keep ws connection in Chrome4+, even if site is reloaded. To set 'unload' event handler and call ws.close() will avoid this situation.
+
+Javascript will be like as follows.
+{{{
+window.onunload = function() {
+  ws.close();
+};
+}}}
