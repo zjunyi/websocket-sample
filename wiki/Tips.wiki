@@ -2,60 +2,57 @@
 
 = Introduction =
 
-Tips for websocket coding.
-
+ Tips for websocket coding.
 
 = Details =
-
 == mod_pywebsocket ==
 
-=== handler name ===
+ === handler name ===
 
-Suffix : _wsh.py
-
-if script name is var_wsh.py and located in _handler_root_/foo/bar_wsh.py, resouce name is /foo/bar. URI will be like this
-
+  Suffix : `_wsh.py`<br>
+  if script name is *var_wsh.py* and located in `<handler_root>`/foo/bar_wsh.py, resouce name is */foo/bar*. URI will be like as follows.
+{{{
 ws://somewhere/foo/bar
+}}}
 
-=== properties (request object) ===
+ === properties (request object) ===
 
   * ws_location
 
   uri of websocket handler
-
-  e.g.
-
-    ws://somewhere/foo/var  
+{{{
+e.g.
+ws://somewhere/foo/var  
+}}}
 
   * ws_origin
 
-  Indicates web sites which calls ws. If web site's uri is "http://somewhere/foo",
-  ws_origin will be
-
-  http://somewhere
-
-  This property is useful in secure design(Origin-based security model).
+  Indicates web sites which calls ws. If web site's uri is *http://somewhere/foo, * ws_origin will be
+{{{
+http://somewhere
+}}}
+  This property is useful in secure coding( _Origin-based security model_ ).
 
   * ws_protocol
 
   This property indicates sub-protocol name. 
-
-  e.g.
-
-    NULL
+{{{
+e.g.
+  NULL
+}}}
 
   * ws_resource
 
-  Resource name of ws. If ws_location is 'ws://somewhere/foo/bar' resource name will be
+  Resource name of ws. If ws_location is *ws://somewhere/foo/bar* resource name will be
+{{{
+/foo/bar
+}}}
 
-    /foo/bar
+ === functions ===
 
-=== functions ===
-  
   * web_socket_do_extra_handshake(request)
 
-    This function is called after clients handshake message validation. 
-
+  This function is called if clients handshake message is valid. Valid message is like as follows.
 {{{
 GET /demo HTTP/1.1
 Upgrade: WebSocket
@@ -65,9 +62,9 @@ Origin: http://example.com
 WebSocket-Protocol: sample
 }}}
 
-    If you consider "Origin-based security model", you'll check request.ws_origin.
+  If you consider "Origin-based security model", you should check *request.ws_origin* .
     
-    If you "pass" clients receives server messages like as follows and connection is established.
+  If you *pass* this function, clients receives server messages like as follows and connection is established.
 {{{
 HTTP/1.1 101 Web Socket Protocol Handshake
 Upgrade: WebSocket
@@ -76,37 +73,42 @@ WebSocket-Origin: http://example.com
 WebSocket-Location: ws://example.com/demo
 WebSocket-Protocol: sample
 }}}
-
-    If raise exception, you can close connection.
+  If *raise exception* , server deny handshakes. 
   
   * web_socket_transfer_data(request)
 
-    This function is called after connection established. This function manages data frames. If "return", mod_pywebsocket close the connection.
+  This function is called after connection established. This function manages *data frames.* If you want to close the connection, simply "return" this function.
   
-  * *string* = msgutil.receive_message(request : request)
+  * `<string>` = msgutil.receive_message(request : request)
 
-    Receive message from client ( %x00 + *( UTF8-char / %x80-%x7E )* + %xff )
+  Receive message from client
+{{{
+%x00 + *( UTF8-char / %x80-%x7E ) + %xff
+}}}
 
   * msgutil.send_message(request : _request_ , message : _string_ )
 
-    Send server initiate message to client ( %x00 + *( UTF8-char / %x80-%x7E )* + %xff )
-
-=== how to check Origin-based security model ===
-
-  If handler is restricted to localhost, script will be like as follows
+  Send server initiate message to client.
 {{{
-  def web_socket_do_extra_handshake(request):
-    if request.ws_origin != 'http://localhost':
-      raise "ws_origin error "+request.ws_origin
-    pass  # if origin is acceptable.
+%x00 + *( UTF8-char / %x80-%x7E ) + %xff
 }}}
 
-=== don't forget to close thread ===
+ === how to check Origin-based security model ===
 
-In many cases, you'll type thread programming, because each _websocket_handler_ works individually (fork process). To share each client's message, shared file or some socket connection is reasonable and this phenomena requires thread programming. If you are in this situation, don't forget to close thread if the connection is going to close. Forget 
-this process sometimes make zombie.
+  request.ws_origin value indicates which site is attempting to connect your ws server. To prevent unreliable web pages to use your ws server's resource, you may check this value.  
+  If ws server's resource is restricted to *localhost, * script will be like as follows
+{{{
+def web_socket_do_extra_handshake(request):
+  if request.ws_origin != 'http://localhost':
+    raise "ws_origin error "+request.ws_origin
+  pass  # if origin is acceptable.
+}}}
 
-python script will be as follows.
+ === don't forget to close thread ===
+
+  In many cases, you'll type thread programming, because each _websocket_handler_ works individually (fork process). To share each client's message, shared file or some socket connection is reasonable and this phenomena requires thread programming. If you are in this situation, don't forget to close thread if the connection is going to close. Forgetting this process sometimes make zombie.
+
+  python script will be as follows.
 {{{
 from mod_pywebsocket import msgutil
 
@@ -128,66 +130,66 @@ def web_socket_do_extra_handshake(request):
 	pass  # Always accept.
 
 def web_socket_transfer_data(request):
-	global _status_
-	_status_ = _OPEN_
-	attr = ()
-	thread.start_new_thread(proc().run, attr)
-	while True:
-		try:
-			line = msgutil.receive_message(request)
-		except Exception:
-			_status_ = _CLOSE_
-			return
+  global _status_
+  _status_ = _OPEN_
+  attr = ()
+  thread.start_new_thread(proc().run, attr)
+  while True:
+    try:
+      line = msgutil.receive_message(request)
+      ...
+
+    except Exception: # client calls ws.close()
+      _status_ = _CLOSE_
+      return # close connection
 }}}
-
-
-
+----
 == apache's configuration ===
 
-=== persistent connection ===
+ === persistent connection ===
 
-  conf/extra/httpd-default.conf
+  _conf/extra/httpd-default.conf_
 {{{
-    KeepAlive Off
+KeepAlive Off
 }}}
   (default:On)
 
-Note that remove comment out for "Include httpd-default.conf" in httpd.conf.
+  _Note::_
+   Don't forget to remove comment out (#) for "Include httpd-default.conf" in httpd.conf.
 
-Without this configuration, server retains connection for several seconds after ws connection was closed due to HTTP/1.1's persistent-connection. 
+  Without this configuration, server retains connection for several seconds after ws connection was closed due to HTTP/1.1's persistent-connection. 
 
-Note::
-
-  Delay time is configured in 
+  _Note::_
+   Delay time is configured in 
 {{{
-    KeepAliveTimeout 5
+KeepAliveTimeout 5
 }}}
-  in extra/httpd-default.conf
+   in extra/httpd-default.conf
 
+----
 == javascript ==
 
-=== heartbeat ===
+ === heartbeat ===
 
-After connection established, ws connection is closed by apache after several minutes without any clent side message ( even if server sent message in this minutes!!).
+  After connection established, ws connection is closed by apache after several minutes without any clent side message ( even if server sent message in this minutes!!).
 
-Note::
+  _Note::_
+   Default is 300 seconds ( "Timeout" in extra/httpd-default.conf ）
 
-Default is 300 seconds ( "Timeout" in extra/httpd-default.conf ）
+  Sending periodically message every few minutes avoid this situation.
 
-Sending periodically message every few minutes avoid this situation.
-
-Javascript will be like as follows.
+  Javascript will be like as follows.
 {{{
 setInterval(function() {
   ws.send('Heartbeat');
 }, 60000);
 }}}
 
-=== window.onunload ===
+ === window.onunload ===
 
-Sometime, it seems to be keep ws connection in Chrome4+, even if site is reloaded. To set 'unload' event handler and call ws.close() will avoid this situation.
+  Sometime, it seems to be keep ws connection in Chrome4+, even if window is closed/reloaded. To set *unload* event handler and call *ws.close()* will avoid this situation.
 
-Javascript will be like as follows.
+  Javascript will be like as follows.
 {{{
 window.onunload = function() {
   ws.close();
