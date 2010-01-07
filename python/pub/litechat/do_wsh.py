@@ -67,10 +67,7 @@ class tail():
 		params += "ws_resource : " + str(self.sock.ws_resource)+"<br />"
 		msgutil.send_message(self.sock, params)
 
-
-
-
-file = os.path.dirname(sys.argv[0])+'messages'
+file = "/home/komasshu/websock_handler/pub/litechat/messages"
 
 def web_socket_do_extra_handshake(request):
 	pass  # Always accept.
@@ -79,7 +76,8 @@ def web_socket_do_extra_handshake(request):
 def web_socket_transfer_data(request):
 	global _status_
 	_status_ = _OPEN_
-	thread.start_new_thread(tail(file, 0.5, request).run, ())
+	arr = ()
+	thread.start_new_thread(tail(file, 0.5, request).run, arr)
 	while True:
 		try:
 			line = msgutil.receive_message(request)
