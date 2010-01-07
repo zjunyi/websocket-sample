@@ -12,7 +12,8 @@ _GOODBYE_MESSAGE = 'Goodbye'
 _HEARTBEAT_ = 'Heartbeat'
 _CONNECTING_ = 0
 _OPEN_ = 1
-_CLOSE_ = 2
+_CLOSING_ = 2
+_CLOSE_ = 3
 
 
 _status_ = _CONNECTING_
@@ -27,10 +28,11 @@ class tail():
 		self.sock = sock
 
 	def run(self):
+		global _status_
 		self.sendConnInfo()
 		while True:
 			if _status_ != _OPEN_:
-				msgutil.send_message(self.sock, "status = "+str(_status_))
+				_status_ = _CLOSE_
 				break
 			time.sleep(self.delay)
 			stat = os.stat(self.filename)
@@ -68,16 +70,16 @@ class tail():
 
 
 
+file = os.path.dirname(sys.argv[0])+'messages'
+
 def web_socket_do_extra_handshake(request):
 	pass  # Always accept.
 
-file = '/home/komasshu/websock_handler/test'
 
 def web_socket_transfer_data(request):
 	global _status_
 	_status_ = _OPEN_
-	attr = ()
-	thread.start_new_thread(tail(file, 0.5, request).run, attr)
+	thread.start_new_thread(tail(file, 0.5, request).run, ())
 	while True:
 		try:
 			line = msgutil.receive_message(request)
@@ -91,10 +93,14 @@ def web_socket_transfer_data(request):
 			f.flush()
 			f.close
 			
-#			if line == _GOODBYE_MESSAGE:
-#				_status_ = _CLOSE_
-#				return
 		except Exception:
-			_status_ = _CLOSE_
+			_status_ = _CLOSING_
+			# wait until _status_ change.
+			i = 0
+			while _status_ == _CLOSING_:
+				time.sleep(0.5)
+				i += 1
+				if i > 10:
+					break
 			return
 
