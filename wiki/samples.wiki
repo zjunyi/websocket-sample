@@ -1,0 +1,52 @@
+#summary Explain how to install sample codes and how to use these.
+
+= Introduction =
+
+ Explain how to install sample codes and how to use these. These samples works well in chrome4+ only.
+
+ * samples
+  * litechat
+  * simple counter
+
+= How to install =
+
+ Getting sample codes via svn checkout 
+
+{{{
+svn checkout http://websocket-sample.googlecode.com/svn/trunk/ websocket-sample-read-only
+}}}
+
+ step 1.
+ * copy ./html/`*` to your `<DocumentRoot>`
+
+ step 2.
+ * copy ./python/`*` to your `<websocket_handler>`
+
+ step 3.
+ * rewrite valiables named *file* ( contained by `<websocket_handler>`/pub/`*`/do_wsh.py ) with your path.
+
+= sample codes. =
+
+ == lite chat ==
+  Images::
+ [http://websocket-sample.googlecode.com/svn/trunk/images/litechat.png http://websocket-sample.googlecode.com/svn/trunk/images/litechat.png]
+
+  Url::
+   `http://somewhere/pub/litechat.html`
+
+  What's this?::
+   This is lite chat sample. Click 'connect' makes connection to websocket server and 'send' button become available. Type message in the box and click 'send', message will be available to other members. Simply, open at least 2 windows will realize bidirectional connection with websocket protocol.<br>
+   To communicate messages, shared file is utilized. Each websockets forked processes monitor it, and send server initiate messages ( if file is updated ).<br>
+   Additionally, it is useful for other websocket service. For example, change 'resource' box to 'echo' and click 'connect', you'll be able to play with "echo_wsh.py" ( which is pywebsocket's sample code ) on browser. With at least 2 windows, you'll see each messages are really independent.
+
+----
+
+ == simple counter ==
+  Images::
+ [http://websocket-sample.googlecode.com/svn/trunk/images/count.png http://websocket-sample.googlecode.com/svn/trunk/images/count.png]
+
+  Url::
+   `http://somewhere/pub/counter.html`
+
+  What's this?::
+   This is simple counter sample. It shows number of users connecting this service, ( that's all, what a simple!!) . This sample simply shows how ease to manage connections. Since websocket is state-full protocol, we can manage connection without id ( required cookies for state-less protocol, HTTP ). 
