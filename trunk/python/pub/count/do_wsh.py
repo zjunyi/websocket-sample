@@ -13,6 +13,7 @@ import fcntl
 _HEARTBEAT_ = 'Heartbeat'
 _CONNECTING_ = 0
 _OPEN_ = 1
+_CLOSING_ = 2
 _CLOSE_ = 2
 
 
@@ -28,8 +29,10 @@ class Response:
 		self.sock = sock
 
 	def run(self):
+		global _status_
 		while True:
 			if _status_ != _OPEN_:
+				_status_ = _CLOSE_
 				break
 			time.sleep(self.delay)
 			stat = os.stat(self.filename)
@@ -80,7 +83,7 @@ class Counter:
 		f.close()
 
 
-file = '/home/komasshu/websock_handler/count'
+file = '/home/komasshu/websock_handler/pub/count/count'
 
 
 def web_socket_do_extra_handshake(request):
@@ -101,7 +104,13 @@ def web_socket_transfer_data(request):
 		try:
 			line = msgutil.receive_message(request)
 		except Exception:
-			_status_ = _CLOSE_
+			_status_ = _CLOSING_
 			counter.decrement()
+			i = 0
+			while _status_ == _CLOSING_:
+				time.sleep(0.5)
+				i += 1
+				if (i > 10):
+					break
 			return
 
