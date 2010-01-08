@@ -79,14 +79,32 @@ WebSocket-Protocol: sample
 
   This function is called after connection established. This function manages *data frames.* If you want to close the connection, simply "return" this function.
   
-  * `<string>` = msgutil.receive_message(request : request)
+  * message = msgutil.receive_message(request : request)
+  
+  Note::
+    _message_ is 'unicode' (not 'string'), so you should use .encode('utf-8') if you want to treat as 'string' like as follows.
+{{{
+message = msgutil.receive_message(request)
+
+message #=> u'あいう'
+print type(message) #=> <type 'unicode'>
+print message.encode('utf-8') #=> 'あいう'
+}}}
 
   Receive message from client
 {{{
 %x00 + *( UTF8-char / %x80-%x7E ) + %xff
 }}}
 
-  * msgutil.send_message(request : _request_ , message : _string_ )
+  * msgutil.send_message(request : _request_ , message : _unicode_ )
+
+  Note::
+    _message_ is 'unicode' (not 'string'), so you should use .decode('utf-8') if you want to send 'string'
+{{{
+message = 'あいうえお'
+msgutil.send_message(request, message.decode('utf-8'))
+}}}
+
 
   Send server initiate message to client.
 {{{
@@ -168,6 +186,33 @@ KeepAliveTimeout 5
 
 ----
 == javascript ==
+ === not to use encodeURIComponent ===
+
+  Among multibytes-language people ( for example, japanese ), they tend to use encodeURIComponent() while sending message to server. In Websockets this manner works well, but it requires more bandwidth than spec required.<br>
+  
+  Websocket is designed to communicate with utf-8.
+{{{
+text-frame = (%x00) *( UTF8-char ) %xFF
+  http://tools.ietf.org/html/draft-hixie-thewebsocketprotocol-68#page-6
+}}}
+  encodeURIComponent encodes UTF8 to ascii character. For example, 'あ' is encoded to '%E3%81%82'. In this case, these encoded string consume 9 bytes. However, 'あ' is 3 bytes in native utf-8 (%xe3%x81%x82). Therefore, sending messages in utf-8 ( this means not to use encodeURIComponent ) may be reasonable to keep network traffic lower and make shortage of messaging delay. So, you'd better to write web page in UTF-8 encode and use ws.send() simple way like as follows.
+{{{
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+....
+<script type="text/javascript">
+....
+  var message = 'もももすももももものうち';
+  ws.send(message);
+</script>
+</body>
+</html>
+}}}
+  Note, not to type ` ws.send(encodeURIComponent()); `...
 
  === heartbeat ===
 
