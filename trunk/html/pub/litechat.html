@@ -125,7 +125,26 @@
 					return;
 				}
 		
-				this.ws.send(encodeURIComponent(message));
+				// this.ws.send(encodeURIComponent(message));
+				this.ws.send(message);
+				///////////////////////////////////////////////////
+				// 2010/01/08 prevent encodeURLComponent
+				// since websocket is designed to communicate
+				// with utf-8.
+				// text-frame = (%x00) *( UTF8-char ) %xFF
+				//  
+				// http://tools.ietf.org/html/
+				//             draft-hixie-thewebsocketprotocol-68#page-6
+				//
+				// URLencode encodes UTF8-char to ascii character.
+				// for example, 'あ' is encoded to '%E3%81%82'.
+				// in this case, these encoded string consume 9 byetes.
+				// however, 'あ' is 3 bytes in native utf-8 (%xe3%x81%x82).
+				// therefore, sending messages in utf-8 ( don't use
+				// encodeURIComponent ) may be reasonable to keep
+				// network traffic lower and make shortage of messaging
+				// delay.
+				///////////////////////////////////////////////////
 				document.getElementsByName('message')[0].value = '';
 			},
 			
@@ -151,3 +170,4 @@
 		</script>
     </body>
 </html>
+
