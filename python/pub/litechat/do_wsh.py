@@ -54,7 +54,12 @@ class tail():
 			for line in f:
 				cnt += 1
 				if cnt == length:
-					msgutil.send_message(self.sock, line[:-1])
+					#######################################################
+					# Note::
+					# mesgutil.send_message()'s second parameter require
+					# 'unicode'. so you shoule use decode('utf-8')
+					#######################################################
+					msgutil.send_message(self.sock, line[:-1].decode('utf-8'))
 			f.close
 		except Exception:
 			if(f):
@@ -80,7 +85,12 @@ def web_socket_transfer_data(request):
 	thread.start_new_thread(tail(file, 0.5, request).run, arr)
 	while True:
 		try:
-			line = msgutil.receive_message(request)
+			#######################################################
+			# Note::
+			# mesgutil.receive_message() returns 'unicode', so
+			# if you want to treated as 'string', use encode('utf-8')
+			#######################################################
+			line = msgutil.receive_message(request).encode('utf-8')
 			
 			if line == _HEARTBEAT_:
 				continue
