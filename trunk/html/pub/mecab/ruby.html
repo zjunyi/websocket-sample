@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Auto-ruby sample (websocket vs. xhr)</title>
+        <script type="text/javascript" src="js/prototype.js"></script>
+    </head>
+    <body>
+    	<style type="text/css">
+    	*{
+			font-size: 10pt;
+		}
+
+		#content {
+			width: 960px;
+			margin-left: auto;
+			margin-right: auto;
+			border: 2px solid blue;
+			border-radius: 5px;
+			padding: 10px;
+		}
+		
+		#input {
+			text-align: center;
+		}
+
+		.result {
+			border: 3px solid gray;
+			color: white;
+			background: black;
+			border-radius: 10px;
+			padding: 10px;
+			width: 450px;
+			height: 360px;
+			overflow: auto;
+		}
+		
+		.result ruby {
+			font-size: smaller;
+			font-weight: bold;
+			color : yellow;
+		}
+		
+		.result rt {
+			font-size: xx-small;
+		}
+		
+		.left {
+			float: left;
+		}
+		.right {
+			float: right;
+		}
+		.clear {
+			clear: both;
+		}
+
+		label {
+			font-size: 9pt;
+			color: #990000;
+		}
+
+		.messbody {
+			font-size: 10pt;
+			border-bottom: pink 1px solid;
+		}
+    	</style>
+    	<div id="content">
+	        <h1>Auto-ruby sample(websocket vs. xhr)</h1>
+			<label>Source:</label><br />
+			<div id="input">
+			<textarea cols="102" rows="7" id="source">
+「坊ちゃん」夏目漱石
+
+親譲りの無鉄砲で小供の時から損ばかりしている。小学校に居る時分学校の二階から飛び降りて一週間ほど腰を抜かした事がある。なぜそんな無闇をしたと聞く人があるかも知れぬ。別段深い理由でもない。新築の二階から首を出していたら、同級生の一人が冗談に、いくら威張っても、そこから飛び降りる事は出来まい。弱虫やーい。と囃したからである。小使に負ぶさって帰って来た時、おやじが大きな眼をして二階ぐらいから飛び降りて腰を抜かす奴があるかと云ったから、この次は抜かさずに飛んで見せますと答えた。
+　親類のものから西洋製のナイフを貰って奇麗な刃を日に翳して、友達に見せていたら、一人が光る事は光るが切れそうもないと云った。切れぬ事があるか、何でも切ってみせると受け合った。そんなら君の指を切ってみろと注文したから、何だ指ぐらいこの通りだと右の手の親指の甲をはすに切り込んだ。幸ナイフが小さいのと、親指の骨が堅かったので、今だに親指は手に付いている。しかし創痕は死ぬまで消えぬ。
+　庭を東へ二十歩に行き尽すと、南上がりにいささかばかりの菜園があって、真中に栗の木が一本立っている。これは命より大事な栗だ。実の熟する時分は起き抜けに背戸を出て落ちた奴を拾ってきて、学校で食う。菜園の西側が山城屋という質屋の庭続きで、この質屋に勘太郎という十三四の倅が居た。勘太郎は無論弱虫である。弱虫の癖に四つ目垣を乗りこえて、栗を盗みにくる。ある日の夕方折戸の蔭に隠れて、とうとう勘太郎を捕まえてやった。その時勘太郎は逃げ路を失って、一生懸命に飛びかかってきた。向うは二つばかり年上である。弱虫だが力は強い。鉢の開いた頭を、こっちの胸へ宛ててぐいぐい押した拍子に、勘太郎の頭がすべって、おれの袷の袖の中にはいった。邪魔になって手が使えぬから、無暗に手を振ったら、袖の中にある勘太郎の頭が、右左へぐらぐら靡いた。しまいに苦しがって袖の中から、おれの二の腕へ食い付いた。痛かったから勘太郎を垣根へ押しつけておいて、足搦をかけて向うへ倒してやった。山城屋の地面は菜園より六尺がた低い。勘太郎は四つ目垣を半分崩して、自分の領分へ真逆様に落ちて、ぐうと云った。勘太郎が落ちるときに、おれの袷の片袖がもげて、急に手が自由になった。その晩母が山城屋に詫びに行ったついでに袷の片袖も取り返して来た。
+　この外いたずらは大分やった。大工の兼公と肴屋の角をつれて、茂作の人参畠をあらした事がある。人参の芽が出揃わぬ処へ藁が一面に敷いてあったから、その上で三人が半日相撲をとりつづけに取ったら、人参がみんな踏みつぶされてしまった。古川の持っている田圃の井戸を埋めて尻を持ち込まれた事もある。太い孟宗の節を抜いて、深く埋めた中から水が湧き出て、そこいらの稲にみずがかかる仕掛であった。その時分はどんな仕掛か知らぬから、石や棒ちぎれをぎゅうぎゅう井戸の中へ挿し込んで、水が出なくなったのを見届けて、うちへ帰って飯を食っていたら、古川が真赤になって怒鳴り込んで来た。たしか罰金を出して済んだようである。
+　おやじはちっともおれを可愛がってくれなかった。母は兄ばかり贔屓にしていた。この兄はやに色が白くって、芝居の真似をして女形になるのが好きだった。おれを見る度にこいつはどうせ碌なものにはならないと、おやじが云った。乱暴で乱暴で行く先が案じられると母が云った。なるほど碌なものにはならない。ご覧の通りの始末である。行く先が案じられたのも無理はない。ただ懲役に行かないで生きているばかりである。
+　母が病気で死ぬ二三日前台所で宙返りをしてへっついの角で肋骨を撲って大いに痛かった。母が大層怒って、お前のようなものの顔は見たくないと云うから、親類へ泊りに行っていた。するととうとう死んだと云う報知が来た。そう早く死ぬとは思わなかった。そんな大病なら、もう少し大人しくすればよかったと思って帰って来た。そうしたら例の兄がおれを親不孝だ、おれのために、おっかさんが早く死んだんだと云った。口惜しかったから、兄の横っ面を張って大変叱られた。
+　母が死んでからは、おやじと兄と三人で暮していた。おやじは何にもせぬ男で、人の顔さえ見れば貴様は駄目だ駄目だと口癖のように云っていた。何が駄目なんだか今に分らない。妙なおやじがあったもんだ。兄は実業家になるとか云ってしきりに英語を勉強していた。元来女のような性分で、ずるいから、仲がよくなかった。十日に一遍ぐらいの割で喧嘩をしていた。ある時将棋をさしたら卑怯な待駒をして、人が困ると嬉しそうに冷やかした。あんまり腹が立ったから、手に在った飛車を眉間へ擲きつけてやった。眉間が割れて少々血が出た。兄がおやじに言付けた。おやじがおれを勘当すると言い出した。			</textarea><br/>
+			<input type="button" id="sendws" value="via websocket">
+			<input type="button" id="sendxhr" value="via xhr">
+			</div>
+			<p></p>
+			<div class="left">
+				<label>case websocket</label>
+				<span id="t_ws">0</span>
+				<div id="wsresult" class="result"></div>
+			</div>
+			<div class="right">
+				<label>case XML HTTP request</label>
+				<span id="t_xhr">0</span>
+				<div id="xhrresult" class="result"></div>
+			</div>
+			<div class="clear"></div>
+    	</div>
+    	<script type="text/javascript">
+		var MyWebSocket = {
+			ws : null,
+			timer : null,
+			seq : 0,
+			messages : null,
+			result : '',
+			start : null,
+			finish : null,
+			init: function(){
+				var that = this;
+				this.connect('mecab/ruby');
+			},
+	
+			connect : function(resource) {
+				if(this.ws)
+					this.ws.close();
+				
+				this.ws = new WebSocket("ws://"+location.host+"/"+resource);
+
+				var that = this;
+
+				this.ws.onmessage = function(e) {
+					that.result += e.data;
+					that.seq += 1;
+					if(that.seq >= (that.messages.length-1) ) {
+						var interval = new Date() - that.start;
+						$('t_ws').innerHTML = interval+"&nbsp;msec";
+						$('wsresult').innerHTML = that.result;
+					} else {
+						$('wsresult').innerHTML = that.seq+"/"+that.messages.length;
+						that.ws.send(that.messages[that.seq]);
+					}
+				};
+				this.ws.onclose = function(e) {
+					if(that.timer) {
+						clearInterval(that.timer);
+						that.timer = null;
+					}
+					that.next = true;
+				};
+				
+				this.timer = setInterval(function(){
+					that.ws.send('Heartbeat');
+				}, 60000);
+
+			},
+	
+			send: function(messages){
+				if(!this.ws) return;
+				
+				if (!(typeof(messages) == 'object' && messages.length > 0)) {
+					alert('not found Message...');
+					return;
+				}
+				
+				this.seq = 0;
+				this.result = '';
+				this.start = new Date();
+				this.messages = messages;				
+				this.ws.send(messages[this.seq]);
+				document.getElementsByName('message').value = '';
+			},
+			
+			close : function() {
+				if(this.ws) {
+					this.ws.close();
+				}
+			}
+		};
+		
+		MyXHR = {
+			rest : '/mecab/do.py/answer',
+			messages : null,
+			seq : 0,
+			result : '',
+			start : null,
+			
+			send : function(messages) {
+				if (!(typeof(messages) == 'object' && messages.length > 0)) {
+					alert('not found Message...');
+					return;
+				}
+				
+				this.seq = 0;
+				this.messages = messages;				
+				this._send();
+				this.result = '';
+				this.start = new Date();
+			},
+			
+			_send : function() {
+				if(this.seq >= this.messages.length ) {
+					var interval = new Date() - this.start;
+					$('t_xhr').innerHTML = interval + "&nbsp;msec";
+					$('xhrresult').innerHTML = this.result;
+					return;
+				}
+				$('xhrresult').innerHTML = this.seq + "/" +this.messages.length;
+
+				var that = this;
+				
+//				var message = encodeURIComponent(this.messages[this.seq]);
+				var message = this.messages[this.seq];
+				new Ajax.Request(that.rest, {
+					method : 'post',
+					parameters : 'sentence='+message,
+					onSuccess : function(e) {
+						that.result += e.responseText;
+						that.seq += 1;
+						that._send();
+					}
+				});
+			}
+			
+		}
+
+		window.addEventListener('load', function(e){
+			MyWebSocket.init();
+		}, false);
+
+		Event.observe($('sendws'), 'click', function(e){
+			var message = $('source').value.replace("\n", "<br/>");
+			if (typeof(message) != undefined || message != '') {
+				$("wsresult").innerHTML = '';
+				var messages = message.split(/(。|．)/);
+				MyWebSocket.send(messages);
+			}
+		}, false);
+
+		Event.observe($('sendxhr'), 'click', function(e){
+			var message = $('source').value.replace("\n", "<br/>");
+			if (typeof(message) != undefined || message != '') {
+				$("xhrresult").innerHTML = '';
+				var messages = message.split(/(。|．)/);
+				MyXHR.send(messages);
+			}
+		}, false);
+		
+		Event.observe(window, 'unload', function(e) {
+			MyWebSocket.close();
+		}, false);
+		</script>
+    </body>
+</html>
+
