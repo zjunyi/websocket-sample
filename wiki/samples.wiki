@@ -50,3 +50,12 @@ svn checkout http://websocket-sample.googlecode.com/svn/trunk/ websocket-sample-
 
   What's this?::
    This is simple counter sample. It shows number of users connecting this service, ( that's all, what a simple!!) . This sample simply shows how ease to manage connections. Since websocket is state-full protocol, we can manage connection without id ( required cookies for state-less protocol, HTTP ). 
+
+----
+
+ == text mining with websocket pipeline ==
+  Url::
+   `http://somewhere/pub/mecab/ruby.html`
+   `http://somewhere/pub/mecab/wakachi.html`
+
+  This demonstratoin includes two text mining. One is appending "ruby" (not language :)) to "Kanji" and another is inserting spacer between each words (either are japanese only).  This demo needs <a href="http://mecab.sourceforge.net/">MeCab</a>, famous japanese text mining open-source product, so on the server side, installing MeCab and python bind are required. This demonstration shows how fast the websocket pipelining is. Comparing "via websocket" vs "via xhr" you'll realize websocket pipelining at least x10 faster than parallel XMLHttpRequest. (I don't know how to type HTTP pipelining in Ajax.Request orz)
