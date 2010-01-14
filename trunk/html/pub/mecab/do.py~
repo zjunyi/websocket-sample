@@ -62,7 +62,7 @@ class MecabTM():
 		return ret
 
 
-def ruby(req, sentence):
+def answer(req, sentence):
 	req.content_type = 'application/json;charset=utf-8'
 	m = MecabTM()
 	
