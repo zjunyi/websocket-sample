@@ -2,7 +2,7 @@
 <html lang="ja">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Auto-ruby sample (websocket vs. xhr)</title>
+        <title>wakachi sample (websocket vs. xhr)</title>
         <script type="text/javascript" src="js/prototype.js"></script>
     </head>
     <body>
@@ -75,8 +75,8 @@
 		}
     	</style>
     	<div id="content">
-	        <h1>Auto-ruby sample(websocket vs. xhr)</h1>
-	        <h3>自動で文書にルビ（振り仮名：<a href="http://dev.w3.org/html5/spec/text-level-semantics.html#the-ruby-element">html5で仕様策定中</a>）を振るサンプルです。"via ..."をクリックすると、ルビ付きの文書に変換してくれます。Webサーバーで<a href="http://mecab.sourceforge.net/">MeCab</a>を組み込んでおり、形態素解析結果より”読み”を取り出して、漢字部分にルビのタグを記述しています。
+	        <h1>Wakachi sample(websocket vs. xhr)</h1>
+	        <h3>文書をわかち書きするサンプルです。"via ..."をクリックすると、わかち書きしてくれます。Webサーバー上での<a href="http://mecab.sourceforge.net/">MeCab</a>で解析した結果を基にわかち書きしてくれます。
 	        <p></p>
 	        解析用サーバーとして、<a href="http://tools.ietf.org/html/draft-hixie-thewebsocketprotocol-68">websocketサーバー</a>と通常のwebサーバーのパターンの2種類を用意しています。websocketサーバーのほうが圧倒的に早いことが分かると思います。これは、websocketのオーバーヘッドが従来のHTTPに比べ非常に小さく、またpipeline処理に適しているためです。</h3>
 	        
@@ -119,7 +119,7 @@
 			finish : null,
 			init: function(){
 				var that = this;
-				this.connect('pub/mecab/ruby');
+				this.connect('pub/mecab/wakachi');
 			},
 	
 			connect : function(resource) {
@@ -188,7 +188,7 @@
 		};
 		
 		MyXHR = {
-			rest : '/pub/mecab/do.py/ruby',
+			rest : '/pub/mecab/do.py/wakachi',
 			messages : null,
 			seq : 0,
 			result : '',

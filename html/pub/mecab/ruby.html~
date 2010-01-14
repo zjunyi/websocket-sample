@@ -188,7 +188,7 @@
 		};
 		
 		MyXHR = {
-			rest : '/pub/mecab/do.py/ruby',
+			rest : 'pub/mecab/do.py/ruby',
 			messages : null,
 			seq : 0,
 			result : '',
