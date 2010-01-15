@@ -52,8 +52,10 @@ svn checkout http://websocket-sample.googlecode.com/svn/trunk/ websocket-sample-
    This is simple counter sample. It shows number of users connecting this service, ( that's all, what a simple!!) . This sample simply shows how ease to manage connections. Since websocket is state-full protocol, we can manage connection without id ( required cookies for state-less protocol, HTTP ). 
 
 ----
-
  == text mining with websocket pipeline ==
+  Images::
+[http://websocket-sample.googlecode.com/svn/trunk/images/WebsocketMeetsMeCab.png http://websocket-sample.googlecode.com/svn/trunk/images/WebsocketMeetsMeCab.png]
+
   Url::
    `http://somewhere/pub/mecab/ruby.html`
    `http://somewhere/pub/mecab/wakachi.html`
