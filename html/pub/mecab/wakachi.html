@@ -102,7 +102,7 @@
 				<div id="wsresult" class="result"></div>
 			</div>
 			<div class="right">
-				<label>case XML HTTP request (parallel Ajax)</label>
+				<label>case XML HTTP request</label>
 				<span id="t_xhr">-1</span>
 				<div id="xhrresult" class="result"></div>
 			</div>
@@ -202,24 +202,15 @@
 				
 				this.seq = 0;
 				this.messages = messages;				
-				// bulk個送信したら、受信完了を待つ
-				var bulk = 50;
 				this.result = '';
 				this.start = new Date();
 				$('xhrresult').innerHTML = "analyzing...";
-				for(var i = 0; i < (messages.length - 1); i++) {			
-					if(( i % bulk ) == 0) {
-						while((this.seq % bulk)!= 0){}
-					}
-					this._send(encodeURIComponent(messages[i]));
-				}
+				this._send(encodeURIComponent(this.messages[0]));
 			},
 			
 			_send : function(message) {
 				var that = this;
 				
-//				var message = encodeURIComponent(this.messages[this.seq]);
-//				var message = this.messages[this.seq];
 				new Ajax.Request(that.rest, {
 					method : 'get',
 					parameters : 'sentence='+message,
@@ -227,12 +218,12 @@
 						that.result += e.responseText;
 						that.seq += 1;
 						$('xhrresult').innerHTML = that.seq + "/" +that.messages.length;
-//						that._send();
 						if(that.seq >= (that.messages.length - 1) ) {
 							var interval = new Date() - that.start;
 							$('t_xhr').innerHTML = interval + "&nbsp;msec";
 							$('xhrresult').innerHTML = that.result;
-//							return;
+						} else {
+							that._send(encodeURIComponent(that.messages[that.seq]));
 						}
 
 					}
