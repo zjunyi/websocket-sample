@@ -238,6 +238,8 @@
 		Event.observe($('sendws'), 'click', function(e){
 			var message = $('source').value.replace("\n", "<br/>");
 			if (typeof(message) != undefined || message != '') {
+				if(!message.match(/.+(。|．)$/))
+					message += "。";
 				$("wsresult").innerHTML = '';
 				var messages = message.split(/(。|．)/);
 				MyWebSocket.send(messages);
