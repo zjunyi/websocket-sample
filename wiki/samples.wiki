@@ -74,4 +74,6 @@ svn checkout http://websocket-sample.googlecode.com/svn/trunk/ websocket-sample-
 
  <img src="http://websocket-sample.googlecode.com/svn/trunk/images/websocketPipeline.png" width="500">
 
+ You can confirm detailed testing data via my blog site's comment ( <a href="http://blog.livedoor.jp/kotesaki/archives/1376548.html">http://blog.livedoor.jp/kotesaki/archives/1376548.html : japanese...</a> ). 
+
   This demonstratoin includes two text mining. One is appending "ruby" (not language :)) to "Kanji" and another is inserting spacer between each words (either are japanese only).  This demo needs <a href="http://mecab.sourceforge.net/">MeCab</a>, famous japanese text mining open-source product, so on the server side, installing MeCab and python bind are required. This demonstration shows how fast the websocket pipelining is. Comparing "via websocket" vs "via xhr" you'll realize websocket pipelining at least x10 faster than parallel XMLHttpRequest. (I don't know how to type HTTP pipelining in Ajax.Request orz)
