@@ -34,6 +34,10 @@ svn checkout http://websocket-sample.googlecode.com/svn/trunk/ websocket-sample-
   Url::
    `http://somewhere/pub/litechat.html`
 
+ == how it works ==
+
+ <img src="http://websocket-sample.googlecode.com/svn/trunk/images/liteChat.png" width="500">
+
   What's this?::
    This is lite chat sample. Click 'connect' makes connection to websocket server and 'send' button become available. Type message in the box and click 'send', message will be available to other members. Simply, open at least 2 windows will realize bidirectional connection with websocket protocol.<br>
    To communicate messages, shared file is utilized. Each websockets forked processes monitor it, and send server initiate messages ( if file is updated ).<br>
@@ -59,5 +63,15 @@ svn checkout http://websocket-sample.googlecode.com/svn/trunk/ websocket-sample-
   Url::
    `http://somewhere/pub/mecab/ruby.html`
    `http://somewhere/pub/mecab/wakachi.html`
+
+ == what's difference between web socket pipeline and http request & response model ==
+
+ Under http (request & response model), it is hard to send request message while waiting for response messages. Http also has http pipeline technique, but it is difficult to use it via browser (for example, firefox requires conifguration via about:config with alert message:p. As a result it requires long processing time for users (almost is only waiting...). Test data shows that to request & response about 100 messages, over 30 seconds were measured between japan and U.S.A.
+ 
+ <img src="http://websocket-sample.googlecode.com/svn/trunk/images/httpResponseRequest.png" width="500">
+
+ WebSocket makes easy way to utilize websocket pipelining. As shown below, websockets are able to send message repeatedly. Protocol does not require waiting for response. Tes data show that websocket pipeling is extremely faster than http ... about 1 sec!! between japan and U.S.A.
+
+ <img src="http://websocket-sample.googlecode.com/svn/trunk/images/websocketPipeline.png" width="500">
 
   This demonstratoin includes two text mining. One is appending "ruby" (not language :)) to "Kanji" and another is inserting spacer between each words (either are japanese only).  This demo needs <a href="http://mecab.sourceforge.net/">MeCab</a>, famous japanese text mining open-source product, so on the server side, installing MeCab and python bind are required. This demonstration shows how fast the websocket pipelining is. Comparing "via websocket" vs "via xhr" you'll realize websocket pipelining at least x10 faster than parallel XMLHttpRequest. (I don't know how to type HTTP pipelining in Ajax.Request orz)
