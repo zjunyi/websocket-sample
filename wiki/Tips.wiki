@@ -1,6 +1,6 @@
 #summary Tips for websocket coding.
 
-= diference between websocket and websocket =
+= difference between websocket and websocket =
 
 <img src="http://websocket-sample.googlecode.com/svn/trunk/images/ws_vs_http.png" width="500">
 
