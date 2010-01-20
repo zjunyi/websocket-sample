@@ -1,5 +1,17 @@
 #summary Tips for websocket coding.
 
+= diference between websocket and websocket =
+
+<img src="http://websocket-sample.googlecode.com/svn/trunk/images/ws_vs_http.png" width="500">
+
+= pywebsocket works like as follows (protocol sequence and indicating when api works) =
+
+<img src="http://websocket-sample.googlecode.com/svn/trunk/images/pywebsocketSequence.png"  width="500">
+
+= what's Origin based Security Model? =
+
+<img src="http://websocket-sample.googlecode.com/svn/trunk/images/originBasedSecurityModel.png"  width="500">
+
 = Introduction =
 
  Tips for websocket coding.
