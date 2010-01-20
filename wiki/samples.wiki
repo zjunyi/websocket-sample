@@ -66,11 +66,11 @@ svn checkout http://websocket-sample.googlecode.com/svn/trunk/ websocket-sample-
 
  == what's difference between web socket pipeline and http request & response model ==
 
- Under http (request & response model), it is hard to send request message while waiting for response messages. Http also has http pipeline technique, but it is difficult to use it via browser (for example, firefox requires conifguration via about:config with alert message:p. As a result it requires long processing time for users (almost is only waiting...). Test data shows that to request & response about 100 messages, over 30 seconds were measured between japan and U.S.A.
+ Under http (request & response model), it is hard to send request message while waiting for response messages. Http also has http pipeline technique, but it is difficult to use via browser (for example, firefox requires conifguration via about:config with alert message:p). As a result, it requires long waiting time for users. Test data shows that to request & response about 100 messages, over 30 seconds were measured between japan and U.S.A.
  
  <img src="http://websocket-sample.googlecode.com/svn/trunk/images/httpResponseRequest.png" width="500">
 
- WebSocket makes easy way to utilize websocket pipelining. As shown below, websockets are able to send message repeatedly. Protocol does not require waiting for response. Tes data show that websocket pipeling is extremely faster than http ... about 1 sec!! between japan and U.S.A.
+ WebSocket makes easy way to utilize websocket pipelining. As shown below, websockets are able to send message repeatedly. Protocol does not require waiting for response, then test data showed that websocket pipeling was extremely faster than http ... about 1 sec!! between japan and U.S.A.
 
  <img src="http://websocket-sample.googlecode.com/svn/trunk/images/websocketPipeline.png" width="500">
 
