@@ -69,8 +69,14 @@
 	        </div>
 	        </div>
 	        <hr>
-			<input type="button" id="via_ws" value="via ws(websocket pipeline)">&nbsp;
-			<input type="button" id="via_http" value="via http(append DOM)"><br />
+	        <div style="float:left;text-align:center;">
+				<input type="button" id="via_ws" value="via ws(websocket pipeline)"><br />
+				<label># of ws connections</label><br /><input type="text" size="2" id="num_ws" value="1">
+			</div>
+	        <div style="float:left;text-align:center;">
+				<input type="button" id="via_http" value="via http(append DOM)"><br />
+			</div>
+			<div style="clear:both"></div>
 			<p></p>
 			<div id="status"></div>
 			<div id="counter"></div>
@@ -79,48 +85,69 @@
     	<script type="text/javascript">
 		
 		var max = 100;
-		var ws = null;
+		var ws = [];
 		var ws_count = 0;
 		var start = null;
 		var finish = null;
 		var out = '';
 		
+		var num = 1;
+		
 		$("#title").html(max+" images download race");
 
 		$("#via_ws").click(function(e){
-			if (ws) {
-				ws.close();
-				ws = null;
+			for(var i = 0; i < 5; i++) {
+				if (ws[i]) {
+					ws[i].close();
+					ws[i] = null;
+				}
 			}
+			
+			num = document.getElementById('num_ws').value;
+			num = ( num < 1 ? 1 : num );
+			num = ( num > 5 ? 5 : num);
+			document.getElementById('num_ws').value = num;
+			
+			
+//			alert(num);
 			
 			ws_count = 0;
 			start = new Date().getTime();
-			ws = new WebSocket("ws://"+location.host+"/pub/100images/dog");
-			ws.onopen = function(e) {
-				btnDisable();
-				$('#status').html('');
-				//$('#counter').html(ws_count+"/"+max);
-				$('#counter').html("");
-				$("#board").html("");
-				out = '';
-				for(var i = 0; i < max; i++) {
-					ws.send("get");
-				}
-			};
-			ws.onmessage = function(e) {
-				$("#board").append("<img src='"+e.data+"'>");
-				ws_count += 1;
-//				$('#counter').html(ws_count+"/"+max);
-				if(ws_count >= max) {
-					btnEnable();
-					finish = new Date().getTime();
-					$("#status").html("....."+(finish-start)+"msec");
-					if(ws){
-						ws.close();
-						ws = null;
+
+			$('#status').html('');
+			$('#counter').html("");
+			$("#board").html("");
+			out = '';
+
+			
+			for(var k = 0; k < num; k++) {
+				ws[k] = new WebSocket("ws://"+location.host+"/pub/100images/dog");
+				ws[k].onopen = function(e) {
+					btnDisable();
+					var _max = parseInt(max / num);
+					for(var i = 0; i < _max; i++) {
+						this.send("get");
 					}
-				}
-			};
+				};
+				ws[k].onmessage = function(e) {
+					ws_count += 1;
+					$("#board").append("<img src='"+e.data+"'>");
+	//				$("#status").html(ws_count);
+	//				$('#counter').html(ws_count+"/"+max);
+					var _max = (num == 3 ? (parseInt(max / num) * 3) : max);
+					if(ws_count >= _max) {
+						btnEnable();
+						finish = new Date().getTime();
+						$("#status").html("....."+(finish-start)+"msec");
+						for(var i = 0; i < num; i++) {
+							if(ws[i]){
+								ws[i].close();
+								ws[i] = null;
+							}
+						}
+					}
+				};
+			}
 		});
 
 		$("#via_http").click(function(e){
@@ -160,8 +187,10 @@
 
 		
 		window.addEventListener('unload', function(e) {
-			if(ws) {
-				ws.close();
+			for(var i = 0; i < 5; i++) {
+				if(ws[i]) {
+					ws.close();
+				}
 			}
 		}, false);
 		</script>
