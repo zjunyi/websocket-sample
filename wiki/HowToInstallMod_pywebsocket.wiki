@@ -18,10 +18,16 @@ mod_so
 
  === install python-dev ===
 
+(Ubuntu9.x)
 {{{
 $ sudo aptitude install python-dev
 }}}
 
+(CentOS4)
+{{{
+# wget ftp://mirror.switch.ch/pool/3/mirror/centos/5.5/os/x86_64/CentOS/python-devel-2.4.3-27.el5.i386.rpm
+# rpm -ivh python-devel-2.4.3-27.el5.i386.rpm
+}}}
  === install mod_python ===
 
 {{{
