@@ -87,7 +87,7 @@ $ pydoc mod_pywebsocket
 
  === config apache ===
 
-  append configuration to httpd.conf shown below.
+  append configuration shown below to httpd.conf.
 
   _Note::_
    change "somewhere" to your arbitraly directory. "mod_pywebsocket.handler_root" means handler scripts root directory (like documentRoot or cgi-bin)
