@@ -97,13 +97,22 @@ $ pydoc mod_pywebsocket
   _Note::_
    change "somewhere" to your arbitraly directory. "mod_pywebsocket.handler_root" means handler scripts root directory (like documentRoot or cgi-bin)
 
+ Under CentOS4 mod_pywebsocket library will be installed in directory below,
+  /usr/lib/python2.4/site-packages/
+ So, change into adequate path_name (it depends on platform you use).
+
 {{{
 <IfModule python_module>
   PythonPath "sys.path+['/usr/local/lib/python2.6/dist-packages']"
   PythonOption mod_pywebsocket.handler_root /somewhere/websock_handlers
   PythonHeaderParserHandler mod_pywebsocket.headerparserhandler
+  PythonOption mod_pywebsocket.allow_draft75 On
 </IfModule>
 }}}
+
+ _Note::_
+ To work with chrome4, 5 or safari5, last configuration line is required. Because,
+ those browsers implementation is based on former spec(called as 75).
 
  === restart apache ===
 
