@@ -14,6 +14,11 @@
 install directory -> /usr/local/apache2
 mod_so
 }}}
+
+If you use built-in apache, you may install httpd-devel
+{{{
+sudo yum install httpd-devel
+}}}
 == Install mod_python ==
 
  === install python-dev ===
