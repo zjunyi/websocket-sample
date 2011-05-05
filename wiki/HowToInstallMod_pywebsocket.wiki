@@ -55,7 +55,11 @@ $ sudo make install
  === configure httpd.conf ===
 
 {{{
+# case source install
 LoadModule python_module modules/mod_python.so
+# case Mac(built-in install)
+LoadModule python_module libexec/apache2/mod_python.so
+
 AddHandler mod_python .py 
 }}}
 
