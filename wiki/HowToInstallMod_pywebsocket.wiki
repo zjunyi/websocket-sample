@@ -36,7 +36,7 @@ $ sudo aptitude install python-dev
  === install mod_python ===
 
 {{{
-$ wget http://ftp.kddilabs.jp/infosystems/apache/httpd/modpython/mod_python-3.3.1.tgz
+$ wget http://archive.apache.org/dist/httpd/modpython/mod_python-3.3.1.tgz
 $ tar xvzf mod_python-3.3.1
 $ cd mod_python-3.3.1
 $ vi src/connobject.c
