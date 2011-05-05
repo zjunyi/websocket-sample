@@ -110,7 +110,7 @@ $ pydoc mod_pywebsocket
 
  Under CentOS4 mod_pywebsocket library will be installed in directory below,
   /usr/lib/python2.4/site-packages/
- So, change into adequate path_name (it depends on platform you use).
+ So, change to adequate path_name (it depends on your system).
 
 {{{
 <IfModule python_module>
