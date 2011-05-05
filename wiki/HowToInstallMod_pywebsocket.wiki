@@ -15,13 +15,15 @@ install directory -> /usr/local/apache2
 mod_so
 }}}
 
-If you use built-in apache, you may install httpd-devel
+If you use built-in apache, you may install httpd-devel (Mac doesn't need the step below :) )
 {{{
 sudo yum install httpd-devel
 }}}
 == Install mod_python ==
 
  === install python-dev ===
+
+ (Mac doesn't need the step below :) )
 
 (Ubuntu9.x)
 {{{
